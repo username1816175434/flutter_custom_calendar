@@ -56,7 +56,6 @@ class CalendarController {
       int offset = 0 // 首日偏移量
       }) {
     assert(offset >= 0 && offset <= 6);
-    LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
     //如果没有指定当前月份和年份，默认是当年时间
     if (nowYear == null) {
       nowYear = DateTime.now().year;
@@ -101,16 +100,6 @@ class CalendarController {
         calendarConfiguration.maxSelectYear,
         calendarConfiguration.maxSelectMonth,
         calendarConfiguration.maxSelectDay));
-
-    LogUtil.log(
-        TAG: this.runtimeType,
-        message: "start:${DateModel.fromDateTime(DateTime(
-          minYear,
-          minYearMonth,
-        ))},end:${DateModel.fromDateTime(DateTime(
-          maxYear,
-          maxYearMonth,
-        ))}");
     _weekAndMonthViewChange(showMode);
   }
   void _weekAndMonthViewChange(
@@ -150,11 +139,6 @@ class CalendarController {
       }
       this.monthController =
           new PageController(initialPage: initialPage, keepPage: true);
-
-      LogUtil.log(
-          TAG: this.runtimeType,
-          message:
-              "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为$nowMonthIndex");
     }
 
     if (showMode != CalendarConstants.MODE_SHOW_ONLY_MONTH) {
@@ -186,18 +170,14 @@ class CalendarController {
           dateTime = dateTime.add(Duration(days: 7))) {
         DateModel dateModel = DateModel.fromDateTime(dateTime);
         weekList.add(dateModel);
-//        print("nowTime.isBefore(dateTime)");
-//        print("$nowTime,,,,$dateTime");
-
         if (nowTime.isAfter(dateTime)) {
           temp++;
+        } else if (nowTime == dateTime)  {
+          temp++;
+          break;
         }
       }
       initialWeekPage = temp;
-      LogUtil.log(
-          TAG: this.runtimeType,
-          message:
-              "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为$initialWeekPage");
       this.weekController = new PageController(initialPage: initialWeekPage);
     }
     calendarConfiguration.monthList = monthList;
@@ -338,7 +318,6 @@ class CalendarController {
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
         temp.day = monthList[currentIndex].day + 14;
-        print('341 周视图的变化: $temp');
         calendarProvider.lastClickDateModel = temp;
         return true;
       }
