@@ -365,10 +365,18 @@ class CalendarController {
       for (int i = 0; i < weekList.length - 1; i++) {
         DateModel first = weekList[i];
         DateModel next = weekList[i + 1];
-        if (!first.isAfter(dateModel) && next.isAfter(dateModel)) {
+        // if (!first.isAfter(dateModel) && next.isAfter(dateModel)) {
+        //   targetPage = i;
+        //   break;
+        // }
+        if ((!first.isAfter(dateModel) || first.isSameWith(dateModel)) && next.isAfter(dateModel)) {
           targetPage = i;
           break;
+        } else if (next.isSameWith(dateModel)) {
+          targetPage = i + 1;
+          break;
         }
+
       }
       if (calendarProvider.calendarConfiguration.weekController.hasClients ==
           false) {
